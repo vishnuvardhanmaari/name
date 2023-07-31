@@ -3,9 +3,9 @@ format_version: 10
 environments:
   gocd:
     pipelines:
-      - gocd
+      - maari
 pipelines:
-  gocd:
+  maari:
     group: gocd
     label_template: ${COUNT}
     lock_behavior: none
