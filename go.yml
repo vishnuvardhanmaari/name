@@ -1,0 +1,126 @@
+---
+format_version: 10
+environments:
+  gocd:
+    pipelines:
+      - gocd
+pipelines:
+  gocd:
+    group: gocd
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      cds:
+        git: https://github.com/vishnuvardhanmaari/name.git
+        shallow_clone: false
+        auto_update: true
+        branch: master
+    stages:
+      - cds:
+          fetch_materials: true
+          keep_artifacts: false
+          clean_workspace: true
+          approval:
+            type: manual
+            allow_only_on_success: false
+          jobs:
+            deployment:
+              timeout: 0
+              resources:
+                - gocd
+              # tasks:
+              #   - plugin:
+              #       configuration:
+              #         id: slack.task
+              #         version: "2.0"
+              #       options:
+              #         WebhookUrl: $Webhookurl
+              #         Message: ""
+              #         IconOrEmoji: ""
+              #         Channel: release-alert-cds-nonprod
+              #         Color: ""
+              #         DisplayName: GO-BOT
+              #         Title: 🚀 CDS-INTEGRATION-DEPLOYMENT starting
+              #         ColorType: Warning
+              #         MarkdownInText: ""
+              #         FailOnError: ""
+              #         ChannelType: Channel
+              #       run_if: passed
+                - exec:
+                    arguments:
+                      - -c 
+                      - echo "Heeyy"
+                    command: /bin/bash
+              #   # - exec:
+              #   #     arguments:
+              #   #       - -c
+              #   #       - docker run -v $(pwd):/app --rm
+              #   #         515481116135.dkr.ecr.ap-southeast-1.amazonaws.com/mgtcloud-deployment:latest
+              #   #         bash -c " mkdir -p /root/.ssh/ && ssh-keyscan
+              #   #         ssh.ap-3.magento.cloud >> /root/.ssh/known_hosts &&
+              #   #         ssh-keyscan git.ap-3.magento.cloud >>
+              #   #         /root/.ssh/known_hosts && curl -o /root/.ssh/id_rsa -LJO
+              #   #         "$Privatekeyurl"
+              #   #         && chmod 600 /root/.ssh/id_rsa && ssh-agent -a
+              #   #         /tmp/ssh_agent.sock > /dev/null && git clone -b
+              #   #         integration
+              #   #         https://$username:$gitacesstoken@github.com/centraldigital/ex-commerce-cds-mdc.git
+              #   #         deploy_repo && cd deploy_repo "
+              #   #     command: /bin/bash                       
+              #   - exec:
+              #       arguments:
+              #         - -c
+              #         - docker run -v $(pwd):/app --rm
+              #           515481116135.dkr.ecr.ap-southeast-1.amazonaws.com/mgtcloud-deployment:latest
+              #           bash -c "echo 'Running composer update...'; composer
+              #           update central/* --ignore-platform-reqs && echo
+              #           'Applying ECE patches...'; vendor/bin/ece-patches apply
+              #           && echo 'Enabling all Magento modules...'; bin/magento
+              #           module:enable --all && echo 'Running Magento
+              #           setup:di:compile...'; bin/magento setup:di:compile "
+              #       command: /bin/bash
+              #       run_if: passed
+                
+                      
+              #   - exec:
+              #       arguments:
+              #         - -c
+              #         - docker run -v $(pwd):/app --rm 515481116135.dkr.ecr.ap-southeast-1.amazonaws.com/mgtcloud-deployment:latest bash -c " mkdir -p /root/.ssh/ && ssh-keyscan ssh.ap-3.magento.cloud >> /root/.ssh/known_hosts && ssh-keyscan git.ap-3.magento.cloud >> /root/.ssh/known_hosts && curl -o /root/.ssh/id_rsa -LJO $Privatekeyurl  && chmod 600 /root/.ssh/id_rsa && ssh-agent -a /tmp/ssh_agent.sock > /dev/null && git clone -b integration https://$username:$gitacesstoken@github.com/centraldigital/ex-commerce-cds-mdc.git deploy_repo && cd deploy_repo && git remote add magento_cloud vsdinyhnv5jiq@git.ap-3.magento.cloud:vsdinyhnv5jiq.git && git push -v magento_cloud HEAD:integration -f "
+              #       command: /bin/bash
+              #       run_if: passed
+              #   - plugin:
+              #       configuration:
+              #         id: slack.task
+              #         version: "2.0"
+              #       options:
+              #         WebhookUrl: $Webhookurl
+              #         Message: ""
+              #         IconOrEmoji: ""
+              #         Channel: release-alert-cds-nonprod
+              #         Color: ""
+              #         DisplayName: GO-BOT
+              #         Title: 🎉 CDS-INTEGRATION-DEPLOYMENT succesful
+              #         ColorType: Good
+              #         MarkdownInText: ""
+              #         FailOnError: ""
+              #         ChannelType: Channel
+              #       run_if: passed
+              #   - plugin:
+              #       configuration:
+              #         id: slack.task
+              #         version: "2.0"
+              #       options:
+              #         WebhookUrl: $Webhookurl
+              #         Message: ""
+              #         IconOrEmoji: ""
+              #         Channel: release-alert-cds-nonprod
+              #         Color: ""
+              #         DisplayName: GO-BOT
+              #         Title: 🔥 CDS-INTEGRATION-DEPLOYMENT failed
+              #         ColorType: Danger
+              #         MarkdownInText: ""
+              #         FailOnError: ""
+              #         ChannelType: Channel
+              #       run_if: failed
+
